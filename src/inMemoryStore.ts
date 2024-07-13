@@ -8,6 +8,7 @@ export interface Room {
 
 export class InMemoryStore implements Store {
     private store: Map<string, Room>
+
     constructor() {
         this.store = new Map<string, Room>()
     }
@@ -30,26 +31,33 @@ export class InMemoryStore implements Store {
     addChat(userId: UserId, name: string, message: string, roomId: string) {
         const room = this.store.get(roomId)
         if (!room) {
-            return []
+            return null
         }
-        return room.chats.push({
+        const chat = {
             id: (globalChatId++).toString(),
             userId,
             name,
             message,
-            upvotes: []  
-        })
+            upvotes: []
+        }
+        room.chats.push(chat)
+        return chat
     }
 
     upvote(userId: UserId, roomId: string, chatId: string) {
-        const room = this.store.get(roomId)
+        const room = this.store.get(roomId);
         if (!room) {
-            return []
+            return 
         }
-        const chat = room.chats.find(({id}) => id === chatId)
+        // Todo: Make this faster
+        const chat = room.chats.find(({id}) => id == chatId);
 
         if (chat) {
-            chat.upvotes.push(userId)
+            if (chat.upvotes.find(x => x === userId)) {
+                return chat;
+            }
+            chat.upvotes.push(userId);
         }
+        return chat;
     }
 }
