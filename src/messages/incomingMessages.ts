@@ -1,31 +1,30 @@
-import z from "zod"
 
+import z from "zod";
 
 export enum SupportedMessage {
-    JoinRoom = "JOIN_ROOM",
+    JoinRoom =  "JOIN_ROOM",
     SendMessage = "SEND_MESSAGE",
-    UpvoteMessage = "UPVOTE_MESSAGE"
+    UpvoteMessage = "UPVOTE_MESSAGE",   
 }
 
 export type IncomingMessages = {
-    type: SupportedMessage.JoinRoom
+    type: SupportedMessage.JoinRoom,
     payload: InitMessageType
 } | {
-    type: SupportedMessage.SendMessage
+    type: SupportedMessage.SendMessage,
     payload: UserMessageType
 } | {
-    type: SupportedMessage.UpvoteMessage
+    type: SupportedMessage.UpvoteMessage,
     payload: UpvoteMessageType
-}
-
+};
 
 export const InitMessage = z.object({
     name: z.string(),
-    userId: z.string(),
-    roomId: z.string()
+    userId: z.string(), 
+    roomId: z.string(),
 })
 
-export type InitMessageType = z.infer<typeof InitMessage>
+export type InitMessageType = z.infer<typeof InitMessage>;
 
 export const UserMessage = z.object({
     userId: z.string(),
@@ -33,8 +32,7 @@ export const UserMessage = z.object({
     message: z.string()
 })
 
-export type UserMessageType = z.infer<typeof UserMessage>
-
+export type UserMessageType = z.infer<typeof UserMessage>;
 
 export const UpvoteMessage = z.object({
     userId: z.string(),
@@ -42,4 +40,4 @@ export const UpvoteMessage = z.object({
     chatId: z.string()
 })
 
-export type UpvoteMessageType = z.infer<typeof UpvoteMessage>
+export type UpvoteMessageType = z.infer<typeof UpvoteMessage>;
