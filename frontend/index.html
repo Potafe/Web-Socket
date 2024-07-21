@@ -16,16 +16,37 @@
         }
 
         ws.onmessage = function(event) {
-            try {
+            try { 
                 const {payload, type} = JSON.parse(event.data)
                 if (type === "ADD_CHAT") {
                     const textNode = document.createElement("p")
+                    const buttonNode = document.createElement("button")
+                    buttonNode.innerHTML = `(${payload.upvotes})`
                     textNode.innerHTML = payload.message + `(${payload.upvotes})`
+                    buttonNode.setAttribute("id", `message-${payload.chatId}`)
+                    buttonNode.setAttribute("onClick", `sendUpvote(${payload.chatId})`)
                     document.getElementById("messages").appendChild(textNode)
+                    document.getElementById("messages").appendChild(buttonNode)
+                } 
+                if (type === "UPDATE_CHAT") {
+                    const buttonNode = document.getElementById(`message-${payload.chatId}`)
+                    buttonNode.innerHTML = `(${payload.upvotes})`
+                    textNode.innerHTML = payload.message + `(${payload.upvotes})`
                 } 
             } catch (e) {
                 console.log(e)
             }
+        }
+        
+        function sendUpvote(chatId) {
+            ws.send(JSON.stringify({
+                type: "UPVOTE_MESSAGE",
+                payload: {
+                    userId: userId,
+                    roomId: "1",
+                    chatId
+                }  
+            }))
         }
 
         function sendChat() {
